@@ -15,12 +15,15 @@ import {
 
 const solved = new Set<string>();
 
+const HARD_DROP = true;
 const ROWS = 4;
-const COLS = 7;
+const COLS = 8;
 
 let m = 0;
 
 const workingSequences = new Set<string>();
+
+const secondBag = [M.O, M.I, M.T, M.L, M.J, M.S, M.Z];
 
 function dfs(board: Board, moves: Move[], unused: M[]): void {
 	clearLines(board);
@@ -33,13 +36,12 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 		const seq = moves.map(({ piece }) => pieceToM(piece)).join("");
 		workingSequences.add(seq);
 
-		// console.log(seq);
-		// console.log(m);
-
 		solved.add(m);
 
 		return;
 	}
+
+	if (!unused.length) unused = secondBag;
 
 	for (let i = 0; i < unused.length; i++) {
 		let piece = PIECES[unused[i]];
@@ -51,7 +53,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 				for (let col = 0; col < COLS; col++) {
 					const move = { piece, row, col };
 
-					if (canPlacePiece(board, move)) {
+					if (canPlacePiece(board, move, HARD_DROP)) {
 						m++;
 
 						if (m % 100000 === 0) console.log(m);
@@ -76,7 +78,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 	}
 }
 
-const start = performance.mark("start");
+performance.mark("start");
 
 dfs(createBoard(ROWS, COLS), [], [M.O, M.I, M.T, M.L, M.J, M.S, M.Z]);
 
@@ -92,7 +94,7 @@ for (let i = 1; i <= COLS; i++) {
 	console.log(a.join("\n"));
 }
 
-function dfsCols<T>(xs: T[], unused: T[]) {
+function dfsCols(xs: M[], unused: M[]) {
 	if (xs.length === COLS) {
 		const seq = xs.join("");
 
@@ -102,6 +104,8 @@ function dfsCols<T>(xs: T[], unused: T[]) {
 
 		return;
 	}
+
+	if (!unused.length) unused = secondBag;
 
 	for (let i = 0; i < unused.length; i++) {
 		const [x] = unused.splice(i, 1);

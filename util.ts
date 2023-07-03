@@ -59,6 +59,8 @@ export const ROTATION_COUNTS: Record<M, number> = {
 	[M.Z]: 2
 };
 
+export const Ms = [M.O, M.I, M.T, M.L, M.J, M.S, M.Z];
+
 export function pieceToM(piece: M[][]): M {
 	return (
 		piece.find(row => row.some(p => p !== M._))?.find(p => p !== M._) ?? M._
@@ -100,13 +102,24 @@ export function rotate(piece: M[][]): M[][] {
 
 export function canPlacePiece(
 	board: Board,
-	{ piece, row, col }: Move
+	{ piece, row, col }: Move,
+	hardDrop = false
 ): boolean {
 	// check space
 	for (let r = 0; r < piece.length; r++) {
 		for (let c = 0; c < piece[0].length; c++) {
 			if (piece[r][c] !== M._ && board[row + r]?.[col + c] !== M._) {
 				return false;
+			}
+		}
+	}
+
+	// check if there are any cells above the piece
+	if (hardDrop) {
+		for (let c = 0; c < piece[0].length; c++) {
+			for (let r = 0; r < row + piece.length; r++) {
+				if (piece[r - row] && piece[r - row][c] !== M._) break;
+				if (board[r][col + c] !== M._) return false;
 			}
 		}
 	}

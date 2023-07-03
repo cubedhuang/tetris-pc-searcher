@@ -12,11 +12,14 @@ import {
 	rotate
 } from "./util.ts";
 
+const HARD_DROP = true;
 const ROWS = 4;
-const COLS = 7;
-const SEQ = "OITZJLS";
+const COLS = 8;
+const SEQ = "IZTOJSLT";
 
 const solutions = new Set<string>();
+
+const secondBag = [M.O, M.I, M.T, M.L, M.J, M.S, M.Z];
 
 function dfs(board: Board, moves: Move[], unused: M[]): void {
 	clearLines(board);
@@ -33,7 +36,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 		return;
 	}
 
-	if (!unused.length) return;
+	if (!unused.length) unused = secondBag;
 
 	const p = unused.pop()!;
 	let piece = PIECES[p];
@@ -43,7 +46,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 			for (let col = 0; col < COLS; col++) {
 				const move = { piece, row, col };
 
-				if (canPlacePiece(board, move)) {
+				if (canPlacePiece(board, move, HARD_DROP)) {
 					const newBoard = board.map(row => [...row]);
 
 					placePiece(newBoard, move);
