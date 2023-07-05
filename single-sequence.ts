@@ -15,7 +15,7 @@ import {
 const HARD_DROP = true;
 const ROWS = 4;
 const COLS = 8;
-const SEQ = "IZTOJSLT";
+const SEQ = "SJTLZOIJ";
 
 const solutions = new Set<string>();
 
@@ -47,7 +47,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 				const move = { piece, row, col };
 
 				if (canPlacePiece(board, move, HARD_DROP)) {
-					const newBoard = board.map(row => [...row]);
+					const newBoard = structuredClone(board);
 
 					placePiece(newBoard, move);
 

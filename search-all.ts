@@ -15,7 +15,7 @@ import {
 
 const solved = new Set<string>();
 
-const HARD_DROP = true;
+const HARD_DROP = false;
 const ROWS = 4;
 const COLS = 8;
 
@@ -58,7 +58,7 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 
 						if (m % 100000 === 0) console.log(m);
 
-						const newBoard = board.map(row => [...row]);
+						const newBoard = board.map(row => [...row]) as Board;
 
 						placePiece(newBoard, move);
 
