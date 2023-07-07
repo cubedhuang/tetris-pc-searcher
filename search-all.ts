@@ -7,13 +7,10 @@ import {
 	canPlacePiece,
 	clearLines,
 	createBoard,
-	movesToString,
 	pieceToM,
 	placePiece,
 	rotate
 } from "./util.ts";
-
-const solved = new Set<string>();
 
 const HARD_DROP = false;
 const ROWS = 4;
@@ -29,14 +26,8 @@ function dfs(board: Board, moves: Move[], unused: M[]): void {
 	clearLines(board);
 
 	if (moves.length && board.every(row => row.every(p => p === M._))) {
-		const m = movesToString(moves);
-
-		if (solved.has(m)) return;
-
 		const seq = moves.map(({ piece }) => pieceToM(piece)).join("");
 		workingSequences.add(seq);
-
-		solved.add(m);
 
 		return;
 	}
